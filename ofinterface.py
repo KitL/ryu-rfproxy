@@ -144,6 +144,12 @@ def add_matches(flow_mod, matches):
             mask = value & ((1 << 32) - 1)
             flow_mod.match.set_dl_type(ETHERTYPE_IP)
             flow_mod.match.set_ipv4_dst_masked(addr, mask)
+        elif match._type == RFMT_IPV4_SRC:
+            value = bin_to_int(match._value)
+            addr = value >> 32
+            mask = value & ((1 << 32) - 1)
+            flow_mod.match.set_dl_type(ETHERTYPE_IP)
+            flow_mod.match.set_ipv4_src_masked(addr, mask)
         elif match._type == RFMT_IPV6:
             v = match._value
             addr = tuple((ord(v[i]) << 8) | ord(v[i + 1])
