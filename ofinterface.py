@@ -23,7 +23,6 @@ def actions_from_routemod(ofproto, parser, action_tlvs):
             dst = parser.OFPMatchField.make(ofproto.OXM_OF_ETH_DST, dstMac)
             actions.append(parser.OFPActionSetField(dst))
         elif action._type == RFAT_SET_VLAN_ID:
-            actions.append(parser.OFPActionPopVlan())
             actions.append(parser.OFPActionPushVlan(0x8100));
             vlan_id = bin_to_int(action._value)
             vlan = parser.OFPMatchField.make(ofproto.OXM_OF_VLAN_VID, vlan_id)
@@ -40,8 +39,7 @@ def actions_from_routemod(ofproto, parser, action_tlvs):
             table_id = bin_to_int(action._value)
             instructions.append(parser.OFPInstructionGotoTable(table_id))
         elif action._type == RFAT_STRIP_VLAN_DEFERRED:
-            instructions.append(parser.OFPInstructionActions(
-                ofproto.OFPIT_WRITE_ACTIONS, (parser.OFPActionPopVlan(),)))
+            actions.append(parser.OFPActionPopVlan())
         elif action.optional():
             log.info("Dropping unsupported Action (type: %s)" % action._type)
         else:

@@ -83,6 +83,7 @@ class RFProcessor(IPC.IPCMessageProcessor):
     def process(self, from_, to, channel, msg):
         type_ = msg.get_type()
         if type_ == ROUTE_MOD:
+            print msg
             switch = self._switches._get_switch(msg.get_id())
             dp = switch.dp
             ofmsg = None
@@ -107,6 +108,8 @@ class RFProcessor(IPC.IPCMessageProcessor):
                 self.send_msg(dp, ofmsg)
             except Exception as e:
                 log.warning("Error sending ofmsg:")
+                print msg
+                print ofmsg
                 log.warning(type(e))
                 log.warning(str(e))
 
